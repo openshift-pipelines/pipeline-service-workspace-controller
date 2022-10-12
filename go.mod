@@ -1,4 +1,4 @@
-module github.com/fgiloux/settings-controller
+module github.com/openshift-pipelines/pipeline-service-workspace-controller
 
 go 1.18
 

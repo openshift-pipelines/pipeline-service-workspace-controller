@@ -22,10 +22,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/kcp"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	settingsv1alpha1 "github.com/fgiloux/settings-controller/api/v1alpha1"
+	settingsv1alpha1 "github.com/openshift-pipelines/pipeline-service-workspace-controller/api/v1alpha1"
 	// +kubebuilder:scaffold:imports
 
-	"github.com/fgiloux/settings-controller/controllers"
+	"github.com/openshift-pipelines/pipeline-service-workspace-controller/controllers"
 
 	apisv1alpha1 "github.com/kcp-dev/kcp/pkg/apis/apis/v1alpha1"
 )

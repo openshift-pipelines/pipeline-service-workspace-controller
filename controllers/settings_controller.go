@@ -16,8 +16,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	cutil "sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
-	settingsv1alpha1 "github.com/fgiloux/settings-controller/api/v1alpha1"
 	apisv1alpha1 "github.com/kcp-dev/kcp/pkg/apis/apis/v1alpha1"
+	settingsv1alpha1 "github.com/openshift-pipelines/pipeline-service-workspace-controller/api/v1alpha1"
 )
 
 type SettingsReconciler struct {
