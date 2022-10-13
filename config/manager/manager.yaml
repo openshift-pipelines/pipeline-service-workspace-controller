@@ -31,7 +31,7 @@ spec:
         - /manager
         args:
         - --api-export-name=settings-configuration.pipeline-service.io
-        - --api-export-workspace="root:pipeline-service:management"
+        - --api-export-workspace="root:default:pipeline-service-compute"
         - --leader-elect
         - -v 2
         image: controller:latest
@@ -56,7 +56,7 @@ spec:
           periodSeconds: 10
         resources:
           limits:
-            cpu: 1
+            cpu: "1"
             memory: 128Mi
           requests:
             cpu: 10m

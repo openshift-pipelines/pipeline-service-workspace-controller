@@ -5,14 +5,14 @@ go 1.18
 require (
 	// github.com/kcp-dev/kcp/pkg/apis v0.5.0-alpha.1
 	github.com/kcp-dev/kcp/pkg/apis v0.7.0
-	github.com/kcp-dev/logicalcluster/v2 v2.0.0-alpha.1
+	github.com/kcp-dev/logicalcluster/v2 v2.0.0-alpha.3
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.18.1
 	k8s.io/api v0.24.3
 	k8s.io/apimachinery v0.24.3
 	k8s.io/client-go v0.24.3
 	k8s.io/klog/v2 v2.60.1
-	sigs.k8s.io/controller-runtime v0.11.2
+	sigs.k8s.io/controller-runtime v0.12.2
 )
 
 require (

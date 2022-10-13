@@ -8,11 +8,7 @@ namespace: settings-ps-controller
 # field above.
 namePrefix: settings-
 
-# Labels to add to all resources and selectors.
-#commonLabels:
-#  someName: someValue
-
-bases:
+resources:
 - ../kcp
 - ../rbac
 - ../manager
@@ -78,4 +74,4 @@ vars:
     kind: APIExport
     name: configuration.pipeline-service.io
   fieldref:
-    fieldPath: metadata.name
+    fieldpath: metadata.name

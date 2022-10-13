@@ -1,6 +1,6 @@
 
 # Image URL to use all building/pushing image targets
-IMG ?= controller:latest
+IMG ?= settings-operator:latest
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.23
 
@@ -74,12 +74,13 @@ test: manifests generate fmt vet envtest ## Run tests.
 build: generate fmt vet ## Build manager binary.
 	go build -o bin/manager main.go
 
-NAME_PREFIX ?= settings-configuration.
+NAME_PREFIX ?= settings-
+NAME_CFG_PREFIX ?= settings-configuration.
 APIEXPORT_NAME ?= pipeline-service.io
 
 .PHONY: run
 run: manifests generate fmt vet ## Run a controller from your host.
-	go run ./main.go --api-export-name $(NAME_PREFIX)$(APIEXPORT_NAME) $(ARGS)
+	go run ./main.go --api-export-name $(NAME_CFG_PREFIX)$(APIEXPORT_NAME) $(ARGS)
 
 .PHONY: docker-build
 docker-build: build ## Build docker image with the manager.
@@ -99,11 +100,12 @@ patch-identity:
 	./hack/patch-identity.sh ${COMPUTE_APIBINDING}
 
 .PHONY: install
-install: manifests kustomize ## Install APIResourceSchemas and APIExport into kcp (using $KUBECONFIG or ~/.kube/config).
+install: manifests patch-identity kustomize ## Install APIResourceSchemas and APIExport into kcp.
+	cd config/kcp && $(KUSTOMIZE) edit set nameprefix $(NAME_PREFIX)
 	$(KUSTOMIZE) build config/kcp | kubectl apply -f -
 
 .PHONY: uninstall
-uninstall: manifests kustomize ## Uninstall APIResourceSchemas and APIExport from kcp (using $KUBECONFIG or ~/.kube/config). Call with ignore-not-found=true to ignore resource not found errors during deletion.
+uninstall: manifests kustomize ## Uninstall APIResourceSchemas and APIExport from kcp. Call with ignore-not-found=true to ignore resource not found errors during deletion.
 	$(KUSTOMIZE) build config/kcp | kubectl delete --ignore-not-found=$(ignore-not-found) -f -
 
 .PHONY: deploy-crd
