@@ -1,3 +1,4 @@
+---
 resources:
   - today.apiresourceschemas.yaml
   - apiexport.yaml

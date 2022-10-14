@@ -9,7 +9,7 @@ webhook:
 leaderElection:
   leaderElect: true
   resourceName: 67a0541b.pipeline-service.io
-namespace: settings-ps-controller
+namespace: admin
 networkPolicyConfig:
   spec:
     podSelector:
@@ -21,8 +21,7 @@ networkPolicyConfig:
 quotaConfig:
   spec:
     hard:
-      count/deployments.apps: "0"
+      count/deployments.apps: "1"
       count/pipelineruns.tekton.dev: "10"
       count/pipelines.tekton.dev: 1k
       count/runs.tekton.dev: "10"
-
