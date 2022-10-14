@@ -12,13 +12,15 @@ import (
 type SettingsNetPolConfig struct {
 	// Specification of the desired behavior for this NetworkPolicy.
 	// +optional
-	Spec netv1.NetworkPolicySpec `json:"spec,omitempty"`
+	Namespace string                  `json:"namespace,omitempty"`
+	Spec      netv1.NetworkPolicySpec `json:"spec,omitempty"`
 }
 
 type SettingsQuotaConfig struct {
 	// Defines the desired quota.
 	// +optional
-	Spec corev1.ResourceQuotaSpec `json:"spec,omitempty"`
+	Namespace string                   `json:"namespace,omitempty"`
+	Spec      corev1.ResourceQuotaSpec `json:"spec,omitempty"`
 }
 
 //+kubebuilder:object:root=true

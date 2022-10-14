@@ -17,7 +17,7 @@ spec:
     state: Accepted
     # identityHash needs to match the export of the workload cluster
     # it can be set with: make patch-identity
-    identityHash: "36d45824f68eba565152ccf6a07f17a45d0d6d34d0c5642046eee6f55ec2f961"
+    identityHash: "17231f31d4e88d067924faaf29738b65255654682c80a3f77f3a71849165f889"
   - group: ""
     resource: "resourcequotas"
     state: Accepted

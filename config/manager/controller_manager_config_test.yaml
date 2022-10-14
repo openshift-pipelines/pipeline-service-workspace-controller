@@ -8,8 +8,9 @@ webhook:
   port: 9443
 leaderElection:
   leaderElect: false
-namespace: admin
+namespace: settings-pipeline-service-controller
 networkPolicyConfig:
+  namespace: pipeline-service
   spec:
     podSelector:
       matchLabels:
@@ -18,6 +19,7 @@ networkPolicyConfig:
     - Ingress
     - Egress
 quotaConfig:
+  namespace: admin
   spec:
     hard:
       count/deployments.apps: "1"

@@ -9,8 +9,9 @@ webhook:
 leaderElection:
   leaderElect: true
   resourceName: 67a0541b.pipeline-service.io
-namespace: admin
+namespace: settings-pipeline-service-controller
 networkPolicyConfig:
+  namespace: pipeline-service
   spec:
     podSelector:
       matchLabels:
@@ -19,6 +20,7 @@ networkPolicyConfig:
     - Ingress
     - Egress
 quotaConfig:
+  namespace: admin
   spec:
     hard:
       count/deployments.apps: "1"
