@@ -1,10 +1,21 @@
----
+# Adds namespace to all resources.
+namespace: settings-pipeline-service-controller
+
+# Value of this field is prepended to the
+# names of all resources, e.g. a deployment named
+# "wordpress" becomes "alices-wordpress".
+# Note that it should also match with the prefix (text before '-') of the namespace
+# field above.
+namePrefix: settings-
+
 resources:
-  - today.apiresourceschemas.yaml
-  - apiexport.yaml
-  - apibinding.yaml
-  - clusterrole.yaml
-  - clusterrolebinding.yaml
+- today.apiresourceschemas.yaml
+- apiexport.yaml
+- apibinding.yaml
+- clusterrole.yaml
+- clusterrolebinding.yaml
 
 configurations:
-  - kustomizeconfig.yaml
+- kustomizeconfig.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization

@@ -139,28 +139,36 @@ func (r *SettingsReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		return ctrl.Result{Requeue: true}, err
 	}
 
-	var ns corev1.Namespace
-	if err := r.Get(ctx, types.NamespacedName{Name: r.CtrlConfig.Namespace}, &ns); err != nil {
-		if errors.IsNotFound(err) {
-			ns.SetName(r.CtrlConfig.Namespace)
-			// Set the APIBinding instance as the owner and controller
-			ctrl.SetControllerReference(&ab, &ns, r.Scheme)
-			if err = r.Create(ctx, &ns); err != nil {
-				logger.Error(err, "unable to create namespace", "resource", ns)
-				return ctrl.Result{}, err
+	// Create namespace for settings, quota and network policy if not present
+	var settingsNS corev1.Namespace
+	var quotasNS corev1.Namespace
+	var netpolNS corev1.Namespace
+
+	var ns = []corev1.Namespace{settingsNS, quotasNS, netpolNS}
+	var nsToCreate = []string{r.CtrlConfig.Namespace, r.CtrlConfig.QuotaConfig.Namespace, r.CtrlConfig.NetPolConfig.Namespace}
+	for i, _ := range ns {
+		if err := r.Get(ctx, types.NamespacedName{Name: nsToCreate[i]}, &ns[i]); err != nil {
+			if errors.IsNotFound(err) {
+				ns[i].SetName(nsToCreate[i])
+				// Set the APIBinding instance as the owner and controller
+				ctrl.SetControllerReference(&ab, &ns[i], r.Scheme)
+				if err = r.Create(ctx, &ns[i]); err != nil {
+					logger.Error(err, "unable to create namespace", "resource", ns[i])
+					return ctrl.Result{}, err
+				}
+				logger.V(1).Info("namespace created", "Namespace", ns[i])
+				return ctrl.Result{Requeue: true}, nil
 			}
-			logger.V(1).Info("Settings created")
-			return ctrl.Result{Requeue: true}, nil
+			return ctrl.Result{}, err
 		}
-		return ctrl.Result{}, err
 	}
 
 	npCondition.Reason = "NetworkPoliciesCreated"
-	npCondition.Message = fmt.Sprintf("NetworkPolicies successfully created in %q namespace", r.CtrlConfig.Namespace)
+	npCondition.Message = fmt.Sprintf("NetworkPolicies successfully created in %q namespace", r.CtrlConfig.NetPolConfig.Namespace)
 	npCondition.Status = metav1.ConditionTrue
 
 	qtCondition.Reason = "QuotasCreated"
-	qtCondition.Message = fmt.Sprintf("Quotas successfully created in %q namespace", r.CtrlConfig.Namespace)
+	qtCondition.Message = fmt.Sprintf("Quotas successfully created in %q namespace", r.CtrlConfig.QuotaConfig.Namespace)
 	qtCondition.Status = metav1.ConditionTrue
 
 	var rtnErr error
@@ -170,7 +178,7 @@ func (r *SettingsReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	// Reverse claim should enforce that the quota cannot be changed by a workspace admin
 	// as long the workspace is bound to the apiexport of the controller
 	var wsQt corev1.ResourceQuota
-	wsQt.SetNamespace(r.CtrlConfig.Namespace)
+	wsQt.SetNamespace(r.CtrlConfig.QuotaConfig.Namespace)
 	wsQt.SetName(QtName)
 	wsQt.SetAnnotations(map[string]string{"experimental.quota.kcp.dev/cluster-scoped": "true"})
 	// Set the APIBinding instance as the owner and controller
@@ -190,7 +198,7 @@ func (r *SettingsReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	// A single NetworkPolicy created in a single namespace defined in the operator configuration
 	// There is no enforcement, more a feature (hermetic build) than a constraint.
 	var wsNP netv1.NetworkPolicy
-	wsNP.SetNamespace(r.CtrlConfig.Namespace)
+	wsNP.SetNamespace(r.CtrlConfig.NetPolConfig.Namespace)
 	wsNP.SetName(NpName)
 	// Set the APIBinding instance as the owner and controller
 	ctrl.SetControllerReference(&ab, &wsNP, r.Scheme)

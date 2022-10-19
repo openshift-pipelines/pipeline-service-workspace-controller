@@ -34,7 +34,7 @@ spec:
         - --api-export-workspace="root:default:pipeline-service-compute"
         - --leader-elect
         - -v 2
-        image: controller:latest
+        image: quay.io/redhat-pipeline-service/settings-operator:latest
         name: manager
         volumeMounts:
         - name: config
